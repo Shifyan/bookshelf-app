@@ -1,5 +1,6 @@
 const STORAGE_KEY = "MY_BOOK";
-
+const myBooks = [];
+const ALERT = "alert_event";
 window.document.addEventListener("DOMContentLoaded", () => {
   const newBookForm = document.getElementById("new-book-form");
   newBookForm.addEventListener("submit", (event) => {
@@ -25,7 +26,9 @@ const addBook = () => {
     year: year,
     isComplete: isComplete,
   };
-  console.log(bookData);
+  myBooks.push(bookData);
+  saveData();
+  document.dispatchEvent(new Event(ALERT));
 };
 
 const generateId = () => {
@@ -41,7 +44,12 @@ const generateId = () => {
   const myId = seconds + minutes + hours + date + month + year + randomNumber;
   return myId;
 };
-
+function saveData() {
+  if (isStorageExist()) {
+    const parsed = JSON.stringify(myBooks);
+    localStorage.setItem(STORAGE_KEY, parsed);
+  }
+}
 const isStorageExist = () => {
   if (typeof Storage === undefined) {
     alert("Browser kamu tidak mendukung local storage");
@@ -52,5 +60,7 @@ const isStorageExist = () => {
 
 const loadDataFromStorage = () => {
   const localStorageData = localStorage.getItem(STORAGE_KEY);
-  console.log(typeof localStorageData);
 };
+document.addEventListener(ALERT, () => {
+  alert("Alert Ini Menggunakan Dispatch Event");
+});
