@@ -58,7 +58,7 @@
               </div>
               <div class="offcanvas-body m-3">
                 <!-- Add New Book Form -->
-                <form>
+                <form id="new-book-form">
                   <div class="mb-3">
                     <label for="title" class="form-label">Judul Buku</label>
                     <input
@@ -90,6 +90,7 @@
                   </div>
                   <div class="mb-3 form-check">
                     <input
+                      id="is-complete"
                       type="checkbox"
                       class="form-check-input"
                       id="exampleCheck1"
@@ -98,7 +99,13 @@
                       >Sudah Dibaca</label
                     >
                   </div>
-                  <button type="submit" class="btn btn-success">Tambah</button>
+                  <button
+                    id="submit-new-book"
+                    type="submit"
+                    class="btn btn-success"
+                  >
+                    Tambah
+                  </button>
                 </form>
                 <!-- Add New Book Form End -->
               </div>
@@ -170,6 +177,8 @@
         </p>
       </div>
     </footer>
+    <!-- Local Script -->
+    <script src="./js/index.js"></script>
     <!-- Bootstrap JS CDN -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
