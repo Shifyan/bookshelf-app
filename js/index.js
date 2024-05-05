@@ -1,6 +1,7 @@
 const STORAGE_KEY = "MY_BOOK";
 const myBooks = [];
-const ALERT = "alert_event";
+const RENDER_DATA = "render_data";
+
 window.document.addEventListener("DOMContentLoaded", () => {
   const newBookForm = document.getElementById("new-book-form");
   newBookForm.addEventListener("submit", (event) => {
@@ -28,7 +29,6 @@ const addBook = () => {
   };
   myBooks.push(bookData);
   saveData();
-  document.dispatchEvent(new Event(ALERT));
 };
 
 const generateId = () => {
@@ -61,6 +61,110 @@ const isStorageExist = () => {
 const loadDataFromStorage = () => {
   const localStorageData = localStorage.getItem(STORAGE_KEY);
 };
-document.addEventListener(ALERT, () => {
-  alert("Alert Ini Menggunakan Dispatch Event");
+
+document.addEventListener(RENDER_DATA, () => {
+  const belumDibaca = document.getElementById("belum-dibaca");
+  belumDibaca.innerHTML = "";
+
+  const sudahDibaca = document.getElementById("sudah-dibaca");
+  sudahDibaca.innerHTML = "";
+
+  myBooks.forEach((book) => {
+    const booksElement = getBooksElement(book);
+    if (!book.isComplete) {
+      belumDibaca.append(booksElement);
+    } else {
+      sudahDibaca.append(booksElement);
+    }
+  });
 });
+const getBooksElement = (book) => {
+  console.log(book);
+
+  // Membuat Card Title
+  const cardTitle = document.createElement("h5");
+  cardTitle.classList.add("card-title");
+  cardTitle.innerText = book.title;
+
+  // Membuat Card Text Author
+  const cardTextAuthor = document.createElement("p");
+  cardTextAuthor.classList.add("card-text", "my-1");
+  cardTextAuthor.innerHTML = book.author;
+
+  // Membuat Card Text Year
+  const cardTextYear = document.createElement("p");
+  cardTextYear.classList.add("card-text");
+  cardTextYear.innerHTML = book.year;
+
+  // Membuat Card Body
+  const cardBody = document.createElement("div");
+  cardBody.classList.add("card-body");
+
+  // Menggabungkan Element ke Card Body
+  cardBody.append(cardTitle, cardTextAuthor, cardTextYear);
+
+  // Membuat Pengkondisian Button
+  if (book.isCompleted) {
+    const btnBelumDibaca = document.createElement("button");
+    btnBelumDibaca.classList.add("btn-belum-dibaca", "btn", "btn-success");
+    btnBelumDibaca.innerText = "Tandai Belum Dibaca";
+
+    btnBelumDibaca.addEventListener("click", function () {
+      bukuBelumDibaca(book.id);
+    });
+
+    const btnHapusBuku = document.createElement("button");
+    btnHapusBuku.classList.add("btn-hapus-buku", "btn", "btn-danger");
+    btnHapusBuku.innerText = "Hapus Buku";
+
+    btnHapusBuku.addEventListener("click", function () {
+      hapusBuku(book.id);
+    });
+
+    cardBody.append(btnBelumDibaca, btnHapusBuku);
+  } else {
+    const btnSudahDibaca = document.createElement("button");
+    btnSudahDibaca.classList.add(
+      "btn-belum-dibaca",
+      "btn",
+      "btn-success",
+      "me-2"
+    );
+    btnSudahDibaca.innerText = "Tandai Sudah Dibaca";
+
+    btnSudahDibaca.addEventListener("click", function () {
+      bukuSudahDibaca(book.id);
+    });
+
+    const btnHapusBuku = document.createElement("button");
+    btnHapusBuku.classList.add("btn-hapus-buku", "btn", "btn-danger");
+    btnHapusBuku.innerText = "Hapus Buku";
+
+    btnHapusBuku.addEventListener("click", function () {
+      hapusBuku(book.id);
+    });
+
+    cardBody.append(btnSudahDibaca, btnHapusBuku);
+  }
+
+  // Membuat Pembungkus Card
+  const cardContainer = document.createElement("div");
+  cardContainer.classList.add("card", "my-3");
+
+  // Menggabungkan Card Body ke Card Container
+  cardContainer.append(cardBody);
+
+  return cardContainer;
+};
+function loadDataFromStorage() {
+  const serializedData = localStorage.getItem(STORAGE_KEY);
+  let data = JSON.parse(serializedData);
+
+  if (data !== null) {
+    date.forEach((value) => {
+      myBooks.push(value);
+    });
+  }
+
+  document.dispatchEvent(new Event(RENDER_EVENT));
+}
