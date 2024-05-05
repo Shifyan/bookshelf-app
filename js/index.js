@@ -4,8 +4,7 @@ const RENDER_DATA = "render_data";
 
 window.document.addEventListener("DOMContentLoaded", () => {
   const newBookForm = document.getElementById("new-book-form");
-  newBookForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+  newBookForm.addEventListener("submit", () => {
     addBook();
   });
   if (isStorageExist()) {
@@ -28,6 +27,7 @@ const addBook = () => {
     isComplete: isComplete,
   };
   myBooks.push(bookData);
+  document.dispatchEvent(new Event(RENDER_DATA));
   saveData();
 };
 
@@ -58,10 +58,6 @@ const isStorageExist = () => {
   return true;
 };
 
-const loadDataFromStorage = () => {
-  const localStorageData = localStorage.getItem(STORAGE_KEY);
-};
-
 document.addEventListener(RENDER_DATA, () => {
   const belumDibaca = document.getElementById("belum-dibaca");
   belumDibaca.innerHTML = "";
@@ -79,8 +75,6 @@ document.addEventListener(RENDER_DATA, () => {
   });
 });
 const getBooksElement = (book) => {
-  console.log(book);
-
   // Membuat Card Title
   const cardTitle = document.createElement("h5");
   cardTitle.classList.add("card-title");
@@ -89,12 +83,12 @@ const getBooksElement = (book) => {
   // Membuat Card Text Author
   const cardTextAuthor = document.createElement("p");
   cardTextAuthor.classList.add("card-text", "my-1");
-  cardTextAuthor.innerHTML = book.author;
+  cardTextAuthor.innerHTML = `Penulis: ${book.author}`;
 
   // Membuat Card Text Year
   const cardTextYear = document.createElement("p");
   cardTextYear.classList.add("card-text");
-  cardTextYear.innerHTML = book.year;
+  cardTextYear.innerHTML = `Tahun Terbit: ${book.year}`;
 
   // Membuat Card Body
   const cardBody = document.createElement("div");
@@ -156,15 +150,35 @@ const getBooksElement = (book) => {
 
   return cardContainer;
 };
-function loadDataFromStorage() {
+const loadDataFromStorage = () => {
   const serializedData = localStorage.getItem(STORAGE_KEY);
   let data = JSON.parse(serializedData);
 
   if (data !== null) {
-    date.forEach((value) => {
+    data.forEach((value) => {
       myBooks.push(value);
     });
   }
 
-  document.dispatchEvent(new Event(RENDER_EVENT));
-}
+  document.dispatchEvent(new Event(RENDER_DATA));
+};
+const cariIndexbuku = (idBuku) => {
+  for (const index in myBooks) {
+    if (myBooks[index].id === idBuku) {
+      return index;
+    }
+  }
+
+  return -1;
+};
+const hapusBuku = (id) => {
+  const bookTarget = cariIndexbuku(id);
+  console.log(bookTarget);
+
+  if (bookTarget === -1) {
+    return;
+  }
+  myBooks.splice(bookTarget, 1);
+  document.dispatchEvent(new Event(RENDER_DATA));
+  saveData();
+};
