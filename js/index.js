@@ -96,11 +96,15 @@ const getBooksElement = (book) => {
 
   // Menggabungkan Element ke Card Body
   cardBody.append(cardTitle, cardTextAuthor, cardTextYear);
-
   // Membuat Pengkondisian Button
-  if (book.isCompleted) {
+  if (book.isComplete) {
     const btnBelumDibaca = document.createElement("button");
-    btnBelumDibaca.classList.add("btn-belum-dibaca", "btn", "btn-success");
+    btnBelumDibaca.classList.add(
+      "btn-belum-dibaca",
+      "btn",
+      "btn-success",
+      "me-2"
+    );
     btnBelumDibaca.innerText = "Tandai Belum Dibaca";
 
     btnBelumDibaca.addEventListener("click", function () {
@@ -179,6 +183,33 @@ const hapusBuku = (id) => {
     return;
   }
   myBooks.splice(bookTarget, 1);
+  document.dispatchEvent(new Event(RENDER_DATA));
+  saveData();
+};
+
+const findBook = (bookId) => {
+  for (const book of myBooks) {
+    if (book.id === bookId) {
+      return book;
+    }
+  }
+  return false;
+};
+const bukuBelumDibaca = (bookId) => {
+  const bookTarget = findBook(bookId);
+  if (bookTarget === false) {
+    return;
+  }
+  bookTarget.isComplete = false;
+  document.dispatchEvent(new Event(RENDER_DATA));
+  saveData();
+};
+const bukuSudahDibaca = (bookId) => {
+  const bookTarget = findBook(bookId);
+  if (bookTarget === false) {
+    return;
+  }
+  bookTarget.isComplete = true;
   document.dispatchEvent(new Event(RENDER_DATA));
   saveData();
 };
