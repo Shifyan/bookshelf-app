@@ -180,6 +180,7 @@ const cariIndexbuku = (idBuku) => {
 
   return -1;
 };
+// Fungsi Hapus Buku
 const hapusBuku = (id) => {
   const bookTarget = cariIndexbuku(id);
 
@@ -199,6 +200,8 @@ const findBook = (bookId) => {
   }
   return false;
 };
+
+// Fungsi Pindah Rak Belum Dibaca
 const bukuBelumDibaca = (bookId) => {
   const bookTarget = findBook(bookId);
   if (bookTarget === false) {
@@ -208,6 +211,8 @@ const bukuBelumDibaca = (bookId) => {
   document.dispatchEvent(new Event(RENDER_DATA));
   saveData();
 };
+
+// Fungsi Pindah Rak Sudah Dibaca
 const bukuSudahDibaca = (bookId) => {
   const bookTarget = findBook(bookId);
   if (bookTarget === false) {
@@ -218,6 +223,7 @@ const bukuSudahDibaca = (bookId) => {
   saveData();
 };
 
+// Fungsi Untuk Search Book
 const searchBook = (input) => {
   loadDataFromStorage();
   if (input === "") {
