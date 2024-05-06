@@ -7,6 +7,11 @@ window.document.addEventListener("DOMContentLoaded", () => {
   newBookForm.addEventListener("submit", () => {
     addBook();
   });
+  const searchBtn = document.getElementById("button-addon2");
+  searchBtn.addEventListener("click", () => {
+    const inputSearch = document.getElementById("search").value.toLowerCase();
+    searchBook(inputSearch);
+  });
   if (isStorageExist()) {
     loadDataFromStorage();
   }
@@ -16,7 +21,7 @@ const addBook = () => {
   const bookId = generateId();
   const title = document.getElementById("title").value;
   const author = document.getElementById("author").value;
-  const year = document.getElementById("year").value;
+  const year = parseInt(document.getElementById("year").value);
   const isComplete = document.getElementById("is-complete").checked;
 
   const bookData = {
@@ -157,7 +162,7 @@ const getBooksElement = (book) => {
 const loadDataFromStorage = () => {
   const serializedData = localStorage.getItem(STORAGE_KEY);
   let data = JSON.parse(serializedData);
-
+  myBooks.length = 0;
   if (data !== null) {
     data.forEach((value) => {
       myBooks.push(value);
@@ -177,7 +182,6 @@ const cariIndexbuku = (idBuku) => {
 };
 const hapusBuku = (id) => {
   const bookTarget = cariIndexbuku(id);
-  console.log(bookTarget);
 
   if (bookTarget === -1) {
     return;
@@ -212,4 +216,24 @@ const bukuSudahDibaca = (bookId) => {
   bookTarget.isComplete = true;
   document.dispatchEvent(new Event(RENDER_DATA));
   saveData();
+};
+
+const searchBook = (input) => {
+  loadDataFromStorage();
+  if (input === "") {
+    document.dispatchEvent(new Event(RENDER_DATA));
+    return;
+  }
+  const result = myBooks.filter((value) => {
+    return value.title.toLowerCase().includes(input);
+  });
+  if (result.length === 0) {
+    alert("Hasil Tidak Ditemukan!");
+    return;
+  }
+  myBooks.length = 0;
+  result.forEach((item) => {
+    myBooks.push(item);
+  });
+  document.dispatchEvent(new Event(RENDER_DATA));
 };
